@@ -126,10 +126,12 @@ namespace EmployeeManagement
         }
 
         // This method fetches all employees and returns them as a list.
-        public static async Task<List<Employee>> Read()
+        public static async Task<ReadResult> Read(int page, int results_per_page)
         {
             // Create JSON object to hold login details.
             JObject _json = new JObject();
+            _json["page"] = page;
+            _json["results_per_page"] = results_per_page;
 
             // Include the login token in JSON.
             _json["token"] = s_Token;
@@ -169,7 +171,7 @@ namespace EmployeeManagement
             }
 
             // Return the result.
-            return _employees;
+            return new ReadResult() { Employees = _employees, TotalePageCount = (int)_json["total_pages"] };
         }
 
         // This methods updates an existing employee details.

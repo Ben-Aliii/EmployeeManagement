@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ReadResult.cs" />
     <Compile Include="Forms\AddEmployeeForm.cs">
       <SubType>Form</SubType>
     </Compile>

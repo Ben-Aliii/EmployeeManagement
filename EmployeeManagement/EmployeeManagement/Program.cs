@@ -13,15 +13,21 @@ namespace EmployeeManagement
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            LoginForm _login;
+            MainForm _main;
+            do
+            {
+                _login = new LoginForm();
+                _main = new MainForm();
 
-            // Make the application start by showing LohinForm first.
-            LoginForm _login = new LoginForm();
-            Application.Run(_login);
+                // Make the application start by showing LoginForm first.
+                Application.Run(_login);
 
-            // If the user signed in successfully it will proceed to the MainForm,
-            // otherwise it will exit.
-            if (_login.Authenticated)
-                Application.Run(new MainForm());
+                // If the user signed in successfully it will procceed to the MainForm,
+                // otherwise it will exit.
+                if (_login.Authenticated)
+                    Application.Run(_main);
+            } while (_main.LoggingOut);
         }
     }
 }

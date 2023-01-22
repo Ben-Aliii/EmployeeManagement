@@ -40,13 +40,17 @@
             this.BTN_update = new System.Windows.Forms.Button();
             this.BTN_delete = new System.Windows.Forms.Button();
             this.CB_searchby = new System.Windows.Forms.ComboBox();
+            this.BTN_logout = new System.Windows.Forms.Button();
+            this.LBL_page = new System.Windows.Forms.Label();
+            this.BTN_nextpage = new System.Windows.Forms.Button();
+            this.BTN_previouspage = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // LBL_search
             // 
             this.LBL_search.AutoSize = true;
             this.LBL_search.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LBL_search.Location = new System.Drawing.Point(12, 21);
+            this.LBL_search.Location = new System.Drawing.Point(118, 21);
             this.LBL_search.Name = "LBL_search";
             this.LBL_search.Size = new System.Drawing.Size(58, 19);
             this.LBL_search.TabIndex = 0;
@@ -58,9 +62,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TXTB_search.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TXTB_search.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TXTB_search.Location = new System.Drawing.Point(78, 19);
+            this.TXTB_search.Location = new System.Drawing.Point(182, 19);
             this.TXTB_search.Name = "TXTB_search";
-            this.TXTB_search.Size = new System.Drawing.Size(340, 27);
+            this.TXTB_search.Size = new System.Drawing.Size(236, 27);
             this.TXTB_search.TabIndex = 1;
             this.TXTB_search.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TXTB_search_KeyDown);
             this.TXTB_search.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TXTB_search_KeyPress);
@@ -80,7 +84,7 @@
             this.LV_employees.FullRowSelect = true;
             this.LV_employees.Location = new System.Drawing.Point(12, 63);
             this.LV_employees.Name = "LV_employees";
-            this.LV_employees.Size = new System.Drawing.Size(860, 487);
+            this.LV_employees.Size = new System.Drawing.Size(860, 445);
             this.LV_employees.TabIndex = 2;
             this.LV_employees.UseCompatibleStateImageBehavior = false;
             this.LV_employees.View = System.Windows.Forms.View.Details;
@@ -175,11 +179,72 @@
             this.CB_searchby.TabIndex = 9;
             this.CB_searchby.SelectedIndexChanged += new System.EventHandler(this.CB_searchby_SelectedIndexChanged);
             // 
+            // BTN_logout
+            // 
+            this.BTN_logout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(96)))), ((int)(((byte)(246)))));
+            this.BTN_logout.FlatAppearance.BorderSize = 0;
+            this.BTN_logout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BTN_logout.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F);
+            this.BTN_logout.ForeColor = System.Drawing.Color.White;
+            this.BTN_logout.Location = new System.Drawing.Point(12, 19);
+            this.BTN_logout.Name = "BTN_logout";
+            this.BTN_logout.Size = new System.Drawing.Size(100, 27);
+            this.BTN_logout.TabIndex = 10;
+            this.BTN_logout.Text = "Logout";
+            this.BTN_logout.UseVisualStyleBackColor = false;
+            this.BTN_logout.Click += new System.EventHandler(this.BTN_logout_Click);
+            // 
+            // LBL_page
+            // 
+            this.LBL_page.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LBL_page.Location = new System.Drawing.Point(413, 525);
+            this.LBL_page.Name = "LBL_page";
+            this.LBL_page.Size = new System.Drawing.Size(75, 25);
+            this.LBL_page.TabIndex = 11;
+            this.LBL_page.Text = "0 / 0";
+            this.LBL_page.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // BTN_nextpage
+            // 
+            this.BTN_nextpage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BTN_nextpage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(96)))), ((int)(((byte)(246)))));
+            this.BTN_nextpage.FlatAppearance.BorderSize = 0;
+            this.BTN_nextpage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BTN_nextpage.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+            this.BTN_nextpage.ForeColor = System.Drawing.Color.White;
+            this.BTN_nextpage.Location = new System.Drawing.Point(494, 525);
+            this.BTN_nextpage.Name = "BTN_nextpage";
+            this.BTN_nextpage.Size = new System.Drawing.Size(75, 25);
+            this.BTN_nextpage.TabIndex = 12;
+            this.BTN_nextpage.Text = "Next";
+            this.BTN_nextpage.UseVisualStyleBackColor = false;
+            this.BTN_nextpage.Click += new System.EventHandler(this.BTN_nextpage_Click);
+            // 
+            // BTN_previouspage
+            // 
+            this.BTN_previouspage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BTN_previouspage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(96)))), ((int)(((byte)(246)))));
+            this.BTN_previouspage.FlatAppearance.BorderSize = 0;
+            this.BTN_previouspage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BTN_previouspage.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+            this.BTN_previouspage.ForeColor = System.Drawing.Color.White;
+            this.BTN_previouspage.Location = new System.Drawing.Point(332, 525);
+            this.BTN_previouspage.Name = "BTN_previouspage";
+            this.BTN_previouspage.Size = new System.Drawing.Size(75, 25);
+            this.BTN_previouspage.TabIndex = 13;
+            this.BTN_previouspage.Text = "Previous";
+            this.BTN_previouspage.UseVisualStyleBackColor = false;
+            this.BTN_previouspage.Click += new System.EventHandler(this.BTN_previouspage_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 562);
+            this.Controls.Add(this.BTN_previouspage);
+            this.Controls.Add(this.BTN_nextpage);
+            this.Controls.Add(this.LBL_page);
+            this.Controls.Add(this.BTN_logout);
             this.Controls.Add(this.CB_searchby);
             this.Controls.Add(this.BTN_delete);
             this.Controls.Add(this.BTN_update);
@@ -208,6 +273,10 @@
         private System.Windows.Forms.Button BTN_delete;
         private System.Windows.Forms.ComboBox CB_searchby;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.Button BTN_logout;
+        private System.Windows.Forms.Label LBL_page;
+        private System.Windows.Forms.Button BTN_nextpage;
+        private System.Windows.Forms.Button BTN_previouspage;
     }
 }
 

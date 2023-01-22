@@ -7,7 +7,19 @@ namespace EmployeeManagement
 {
     public partial class MainForm : Form
     {
+        public bool LoggingOut
+        {
+            get
+            {
+                return m_LoggingOut;
+            }
+        }
+
+        private bool m_LoggingOut = false;
         private List<Employee> m_Employees;
+        private int m_Page = 1;
+        private int m_ResultsPerPage = 10;
+        private int m_TotalPageCount;
 
         public MainForm()
         {
@@ -24,14 +36,23 @@ namespace EmployeeManagement
             // them in a private field and then update the UI.
             Task.Run(async () =>
             {
-                m_Employees = await EmployeeManager.Read();
+                ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                m_TotalPageCount = _result.TotalePageCount;
+                m_Employees = _result.Employees;
+                UpdatePageLabel();
                 UpdateListView();
             });
         }
-
+        
         #endregion
 
         #region ui event methods
+
+        private void BTN_logout_Click(object sender, EventArgs e)
+        {
+            m_LoggingOut = true;
+            Close();
+        }
 
         private async void BTN_add_Click(object sender, EventArgs e)
         {
@@ -50,7 +71,10 @@ namespace EmployeeManagement
                 );
                 if (_success)
                 {
-                    m_Employees = await EmployeeManager.Read();
+                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    m_TotalPageCount = _result.TotalePageCount;
+                    m_Employees = _result.Employees;
+                    UpdatePageLabel();
                     UpdateListView();
                 }
             }
@@ -78,7 +102,10 @@ namespace EmployeeManagement
                 );
                 if (_success)
                 {
-                    m_Employees = await EmployeeManager.Read();
+                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    m_TotalPageCount = _result.TotalePageCount;
+                    m_Employees = _result.Employees;
+                    UpdatePageLabel();
                     UpdateListView();
                 }
             }
@@ -93,7 +120,10 @@ namespace EmployeeManagement
             bool _success = await EmployeeManager.Delete(_emp.Id);
             if (_success)
             {
-                m_Employees = await EmployeeManager.Read();
+                ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                m_TotalPageCount = _result.TotalePageCount;
+                m_Employees = _result.Employees;
+                UpdatePageLabel();
                 UpdateListView();
             }
         }
@@ -113,6 +143,38 @@ namespace EmployeeManagement
         private void CB_searchby_SelectedIndexChanged(object sender, EventArgs e)
         {
             Search();
+        }
+
+        private void BTN_nextpage_Click(object sender, EventArgs e)
+        {
+            if (m_Page < m_TotalPageCount)
+            {
+                m_Page++;
+                Task.Run(async () =>
+                {
+                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    m_TotalPageCount = _result.TotalePageCount;
+                    m_Employees = _result.Employees;
+                    UpdatePageLabel();
+                    UpdateListView();
+                });
+            }
+        }
+
+        private void BTN_previouspage_Click(object sender, EventArgs e)
+        {
+            if (m_Page > 1)
+            {
+                m_Page--;
+                Task.Run(async () =>
+                {
+                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    m_TotalPageCount = _result.TotalePageCount;
+                    m_Employees = _result.Employees;
+                    UpdatePageLabel();
+                    UpdateListView();
+                });
+            }
         }
 
         #endregion
@@ -144,6 +206,11 @@ namespace EmployeeManagement
                 _items.Add(_item);
             }
             LV_employees.Invoke((Action)(() => { LV_employees.Items.AddRange(_items.ToArray()); }));
+        }
+
+        private void UpdatePageLabel()
+        {
+            LBL_page.Invoke((Action)(() => LBL_page.Text = m_Page + " / " + m_TotalPageCount));
         }
 
         // Performs search based on the text value of search textbox and the value of the dropdown.

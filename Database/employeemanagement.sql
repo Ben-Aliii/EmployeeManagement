@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 22, 2023 at 10:29 AM
+-- Generation Time: Jan 22, 2023 at 06:20 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -49,7 +49,14 @@ INSERT INTO `employees` (`id`, `first_name`, `last_name`, `job_title`, `email`, 
 (5, 'Pat', 'Fay', 'Clerical', 'pfay@gmail.com', '123', 0),
 (6, 'Douglas', 'Grant', 'Clerical', 'dgrant@gmail.com', '123', 0),
 (7, 'David', 'Austin', 'Manager', 'daustin@gmail.com', '123', 1),
-(8, 'Luis', 'Popp', 'Clerical', 'lpopp@yahoo.com', '123', 0);
+(8, 'Luis', 'Popp', 'Clerical', 'lpopp@yahoo.com', '123', 0),
+(11, 'Matthew', 'Weiss', 'Clerical', 'mweiss@hotmail.com', '123', 0),
+(12, 'Lex', 'De Haan', 'Manager', 'ldehaan@gmail.com', '123', 1),
+(13, 'John', 'Chen', 'Clerical', 'jchen@jayoo.com', '123', 0),
+(14, 'Alexander', 'Khoo', 'Clerical', 'akhoo@hotmail.com', '123', 0),
+(15, 'Guy', 'Himuro', 'Clerical', 'ghimuro@gmail.com', '123', 0),
+(16, 'Adam', 'Fripp', 'Clerical', 'afripp@gmail.com', '123', 0),
+(17, 'gg', 'gggg', 'gg', 'gg@gg.com', 'gg', 0);
 
 --
 -- Indexes for dumped tables
@@ -69,7 +76,7 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

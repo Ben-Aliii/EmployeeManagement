@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 
 namespace EmployeeManagement
 {
-    public partial class AddEmployeeForm : Form
+    public partial class AddEmployeeForm : MaterialForm
     {
         public int Id
         {
@@ -60,6 +62,7 @@ namespace EmployeeManagement
         public AddEmployeeForm()
         {
             InitializeComponent();
+            Initialize();
         }
 
         public AddEmployeeForm(Employee employee)
@@ -125,7 +128,10 @@ namespace EmployeeManagement
         private void TXTB_firstname_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
                 TXTB_lastname.Focus();
+            }
         }
 
         private void TXTB_firstname_KeyPress(object sender, KeyPressEventArgs e)
@@ -137,7 +143,10 @@ namespace EmployeeManagement
         private void TXTB_lastname_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
                 TXTB_jobtitle.Focus();
+            }
         }
 
         private void TXTB_lastname_KeyPress(object sender, KeyPressEventArgs e)
@@ -149,7 +158,10 @@ namespace EmployeeManagement
         private void TXTB_jobtitle_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
                 TXTB_email.Focus();
+            }
         }
 
         private void TXTB_jobtitle_KeyPress(object sender, KeyPressEventArgs e)
@@ -161,7 +173,10 @@ namespace EmployeeManagement
         private void TXTB_email_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
                 TXTB_password.Focus();
+            }
         }
 
         private void TXTB_email_KeyPress(object sender, KeyPressEventArgs e)
@@ -172,13 +187,26 @@ namespace EmployeeManagement
 
         private void TXTB_password_KeyDown(object sender, KeyEventArgs e)
         {
-
+            if (e.KeyCode == Keys.Enter)
+                e.Handled = true;
         }
 
         private void TXTB_password_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (int)Keys.Enter)
                 e.Handled = true;
+        }
+
+        #endregion
+
+        #region private methods
+
+        private void Initialize()
+        {
+            MaterialSkinManager.Instance.EnforceBackcolorOnAllComponents = true;
+            MaterialSkinManager.Instance.AddFormToManage(this);
+            MaterialSkinManager.Instance.Theme = MaterialSkinManager.Themes.LIGHT;
+            MaterialSkinManager.Instance.ColorScheme = new ColorScheme(Primary.Indigo500, Primary.Indigo700, Primary.Indigo100, Accent.Pink200, TextShade.WHITE);
         }
 
         #endregion

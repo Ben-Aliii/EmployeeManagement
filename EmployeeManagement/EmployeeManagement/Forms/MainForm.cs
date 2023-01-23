@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 
 namespace EmployeeManagement
 {
-    public partial class MainForm : Form
+    public partial class MainForm : MaterialForm
     {
         public bool LoggingOut
         {
@@ -36,14 +39,14 @@ namespace EmployeeManagement
             // them in a private field and then update the UI.
             Task.Run(async () =>
             {
-                ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                DataResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
                 m_TotalPageCount = _result.TotalePageCount;
                 m_Employees = _result.Employees;
                 UpdatePageLabel();
                 UpdateListView();
             });
         }
-        
+
         #endregion
 
         #region ui event methods
@@ -71,7 +74,7 @@ namespace EmployeeManagement
                 );
                 if (_success)
                 {
-                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    DataResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
                     m_TotalPageCount = _result.TotalePageCount;
                     m_Employees = _result.Employees;
                     UpdatePageLabel();
@@ -81,7 +84,7 @@ namespace EmployeeManagement
             _form.Dispose();
         }
 
-        private async void BTN_update_Click(object sender, EventArgs e)
+        private async void BTN_edit_Click(object sender, EventArgs e)
         {
             if (LV_employees.SelectedItems.Count <= 0)
                 return;
@@ -102,7 +105,7 @@ namespace EmployeeManagement
                 );
                 if (_success)
                 {
-                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    DataResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
                     m_TotalPageCount = _result.TotalePageCount;
                     m_Employees = _result.Employees;
                     UpdatePageLabel();
@@ -120,7 +123,7 @@ namespace EmployeeManagement
             bool _success = await EmployeeManager.Delete(_emp.Id);
             if (_success)
             {
-                ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                DataResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
                 m_TotalPageCount = _result.TotalePageCount;
                 m_Employees = _result.Employees;
                 UpdatePageLabel();
@@ -131,7 +134,10 @@ namespace EmployeeManagement
         private void TXTB_search_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
                 Search();
+            }
         }
 
         private void TXTB_search_KeyPress(object sender, KeyPressEventArgs e)
@@ -145,14 +151,14 @@ namespace EmployeeManagement
             Search();
         }
 
-        private void BTN_nextpage_Click(object sender, EventArgs e)
+        private void BTN_next_Click(object sender, EventArgs e)
         {
             if (m_Page < m_TotalPageCount)
             {
                 m_Page++;
                 Task.Run(async () =>
                 {
-                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    DataResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
                     m_TotalPageCount = _result.TotalePageCount;
                     m_Employees = _result.Employees;
                     UpdatePageLabel();
@@ -161,14 +167,14 @@ namespace EmployeeManagement
             }
         }
 
-        private void BTN_previouspage_Click(object sender, EventArgs e)
+        private void BTN_previous_Click(object sender, EventArgs e)
         {
             if (m_Page > 1)
             {
                 m_Page--;
                 Task.Run(async () =>
                 {
-                    ReadResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                    DataResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
                     m_TotalPageCount = _result.TotalePageCount;
                     m_Employees = _result.Employees;
                     UpdatePageLabel();
@@ -183,7 +189,13 @@ namespace EmployeeManagement
 
         private void Initialize()
         {
-            CB_searchby.SelectedIndex = 0;
+            MaterialSkinManager.Instance.EnforceBackcolorOnAllComponents = true;
+            MaterialSkinManager.Instance.AddFormToManage(this);
+            MaterialSkinManager.Instance.Theme = MaterialSkinManager.Themes.LIGHT;
+            MaterialSkinManager.Instance.ColorScheme = new ColorScheme(Primary.Indigo500, Primary.Indigo700, Primary.Indigo100, Accent.Pink200, TextShade.WHITE);
+            ImageList _imagelist = new ImageList();
+            _imagelist.ImageSize = new Size(1, 35);
+            LV_employees.SmallImageList = _imagelist;
         }
 
         // Updates the listview with employee data from the private field.
@@ -208,113 +220,30 @@ namespace EmployeeManagement
             LV_employees.Invoke((Action)(() => { LV_employees.Items.AddRange(_items.ToArray()); }));
         }
 
+        // Update the page label.
         private void UpdatePageLabel()
         {
             LBL_page.Invoke((Action)(() => LBL_page.Text = m_Page + " / " + m_TotalPageCount));
         }
 
-        // Performs search based on the text value of search textbox and the value of the dropdown.
-        private void Search()
+        // Perform the search call to the API.
+        private async void Search()
         {
-            if (m_Employees == null)
-                return;
             if (string.IsNullOrEmpty(TXTB_search.Text))
             {
-                LV_employees.Items.Clear();
-                List<ListViewItem> _items = new List<ListViewItem>();
-                for (int i = 0; i < m_Employees.Count; i++)
-                {
-                    ListViewItem _item = new ListViewItem();
-                    _item.Tag = m_Employees[i];
-                    _item.Text = m_Employees[i].FirstName;
-                    _item.SubItems.Add(m_Employees[i].LastName);
-                    _item.SubItems.Add(m_Employees[i].JobTitle);
-                    _item.SubItems.Add(m_Employees[i].Email);
-                    _item.SubItems.Add(m_Employees[i].IsAdmin ? "Yes" : "No");
-                    _items.Add(_item);
-                }
-                LV_employees.Items.AddRange(_items.ToArray());
-                return;
+                DataResult _result = await EmployeeManager.Read(m_Page, m_ResultsPerPage);
+                m_TotalPageCount = _result.TotalePageCount;
+                m_Employees = _result.Employees;
+                UpdatePageLabel();
+                UpdateListView();
             }
-            if (CB_searchby.SelectedIndex == 0)
+            else
             {
-                LV_employees.Items.Clear();
-                List<ListViewItem> _items = new List<ListViewItem>();
-                for (int i = 0; i < m_Employees.Count; i++)
-                {
-                    if (m_Employees[i].FirstName.ToLower().Contains(TXTB_search.Text.ToLower()))
-                    {
-                        ListViewItem _item = new ListViewItem();
-                        _item.Tag = m_Employees[i];
-                        _item.Text = m_Employees[i].FirstName;
-                        _item.SubItems.Add(m_Employees[i].LastName);
-                        _item.SubItems.Add(m_Employees[i].JobTitle);
-                        _item.SubItems.Add(m_Employees[i].Email);
-                        _item.SubItems.Add(m_Employees[i].IsAdmin ? "Yes" : "No");
-                        _items.Add(_item);
-                    }
-                }
-                LV_employees.Items.AddRange(_items.ToArray());
-            }
-            else if (CB_searchby.SelectedIndex == 1)
-            {
-                LV_employees.Items.Clear();
-                List<ListViewItem> _items = new List<ListViewItem>();
-                for (int i = 0; i < m_Employees.Count; i++)
-                {
-                    if (m_Employees[i].LastName.ToLower().Contains(TXTB_search.Text.ToLower()))
-                    {
-                        ListViewItem _item = new ListViewItem();
-                        _item.Tag = m_Employees[i];
-                        _item.Text = m_Employees[i].FirstName;
-                        _item.SubItems.Add(m_Employees[i].LastName);
-                        _item.SubItems.Add(m_Employees[i].JobTitle);
-                        _item.SubItems.Add(m_Employees[i].Email);
-                        _item.SubItems.Add(m_Employees[i].IsAdmin ? "Yes" : "No");
-                        _items.Add(_item);
-                    }
-                }
-                LV_employees.Items.AddRange(_items.ToArray());
-            }
-            else if (CB_searchby.SelectedIndex == 2)
-            {
-                LV_employees.Items.Clear();
-                List<ListViewItem> _items = new List<ListViewItem>();
-                for (int i = 0; i < m_Employees.Count; i++)
-                {
-                    if (m_Employees[i].JobTitle.ToLower().Contains(TXTB_search.Text.ToLower()))
-                    {
-                        ListViewItem _item = new ListViewItem();
-                        _item.Tag = m_Employees[i];
-                        _item.Text = m_Employees[i].FirstName;
-                        _item.SubItems.Add(m_Employees[i].LastName);
-                        _item.SubItems.Add(m_Employees[i].JobTitle);
-                        _item.SubItems.Add(m_Employees[i].Email);
-                        _item.SubItems.Add(m_Employees[i].IsAdmin ? "Yes" : "No");
-                        _items.Add(_item);
-                    }
-                }
-                LV_employees.Items.AddRange(_items.ToArray());
-            }
-            else if (CB_searchby.SelectedIndex == 3)
-            {
-                LV_employees.Items.Clear();
-                List<ListViewItem> _items = new List<ListViewItem>();
-                for (int i = 0; i < m_Employees.Count; i++)
-                {
-                    if (m_Employees[i].Email.ToLower().Contains(TXTB_search.Text.ToLower()))
-                    {
-                        ListViewItem _item = new ListViewItem();
-                        _item.Tag = m_Employees[i];
-                        _item.Text = m_Employees[i].FirstName;
-                        _item.SubItems.Add(m_Employees[i].LastName);
-                        _item.SubItems.Add(m_Employees[i].JobTitle);
-                        _item.SubItems.Add(m_Employees[i].Email);
-                        _item.SubItems.Add(m_Employees[i].IsAdmin ? "Yes" : "No");
-                        _items.Add(_item);
-                    }
-                }
-                LV_employees.Items.AddRange(_items.ToArray());
+                DataResult _result = await EmployeeManager.Search(TXTB_search.Text, CB_searchmethod.SelectedIndex + 1);
+                m_TotalPageCount = _result.TotalePageCount;
+                m_Employees = _result.Employees;
+                UpdatePageLabel();
+                UpdateListView();
             }
         }
 

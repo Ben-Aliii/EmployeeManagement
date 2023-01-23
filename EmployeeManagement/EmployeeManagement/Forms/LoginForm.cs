@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 
 namespace EmployeeManagement
 {
-    public partial class LoginForm : Form
+    public partial class LoginForm : MaterialForm
     {
         public bool Authenticated
         {
@@ -18,6 +21,7 @@ namespace EmployeeManagement
         public LoginForm()
         {
             InitializeComponent();
+            Initialize();
             //TXTB_email.Text = "admintest@gmail.com";
             //TXTB_password.Text = "123four";
         }
@@ -32,7 +36,10 @@ namespace EmployeeManagement
         private void TXTB_email_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
                 TXTB_password.Focus();
+            }
         }
 
         private void TXTB_email_KeyPress(object sender, KeyPressEventArgs e)
@@ -44,7 +51,10 @@ namespace EmployeeManagement
         private void TXTB_password_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
                 Login();
+            }
         }
 
         private void TXTB_password_KeyPress(object sender, KeyPressEventArgs e)
@@ -56,6 +66,16 @@ namespace EmployeeManagement
         #endregion
 
         #region private methods
+
+        private void Initialize()
+        {
+            MaterialSkinManager.Instance.EnforceBackcolorOnAllComponents = true;
+            //MaterialSkinManager.Instance.AddFormToManage(this);
+            MaterialSkinManager.Instance.Theme = MaterialSkinManager.Themes.LIGHT;
+            MaterialSkinManager.Instance.ColorScheme = new ColorScheme(Primary.Indigo500, Primary.Indigo700, Primary.Indigo100, Accent.Pink200, TextShade.WHITE);
+            LBL_title.Font = new Font("Microsoft YaHei UI", 15.0f, FontStyle.Regular);
+            LBL_title.ForeColor = Color.DimGray;
+        }
 
         private async void Login()
         {

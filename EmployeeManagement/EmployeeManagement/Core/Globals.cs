@@ -7,6 +7,6 @@
         public const string EmployeeReadUrl = "http://localhost/employeemanagement/employee/employee_read.php";
         public const string EmployeeUpdateUrl = "http://localhost/employeemanagement/employee/employee_update.php";
         public const string EmployeeDeleteUrl = "http://localhost/employeemanagement/employee/employee_delete.php";
-
+        public const string EmployeeSearchUrl = "http://localhost/employeemanagement/employee/employee_search.php";
     }
 }

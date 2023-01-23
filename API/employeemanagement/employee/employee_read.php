@@ -6,7 +6,8 @@ include_once '../utility/token.php';
 $data = json_decode($_POST["data"]);
 $table = "employees";
 
-$query = "SELECT * FROM " . $table;
+$page_first_result = ($data->page - 1) * $data->results_per_page;
+$query = "SELECT * FROM " . $table . " LIMIT " . $page_first_result . ", " . $data->results_per_page;
 
 // Decode the token and check for validity.
 $token = Decode($data->token);
@@ -17,6 +18,12 @@ if ($token != null)
 
     if ($connection != null)
     {
+        // Get how many rows are in the table.
+        $num = $connection->query("SELECT count(*) FROM " . $table)->fetchColumn();
+
+        // Calculate the total number to pages.
+        $total_pages = ceil($num / $data->results_per_page);
+
         // Prepare the query.
         $stmt = $connection->prepare($query);
 
@@ -35,6 +42,7 @@ if ($token != null)
         (
             array
             (
+                "total_pages" => $total_pages,
                 "employees" => $employees
             )
         );

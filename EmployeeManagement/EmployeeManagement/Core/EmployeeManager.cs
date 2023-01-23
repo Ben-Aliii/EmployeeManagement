@@ -126,7 +126,7 @@ namespace EmployeeManagement
         }
 
         // This method fetches all employees and returns them as a list.
-        public static async Task<ReadResult> Read(int page, int results_per_page)
+        public static async Task<DataResult> Read(int page, int results_per_page)
         {
             // Create JSON object to hold login details.
             JObject _json = new JObject();
@@ -171,7 +171,7 @@ namespace EmployeeManagement
             }
 
             // Return the result.
-            return new ReadResult() { Employees = _employees, TotalePageCount = (int)_json["total_pages"] };
+            return new DataResult() { Employees = _employees, TotalePageCount = (int)_json["total_pages"] };
         }
 
         // This methods updates an existing employee details.
@@ -266,6 +266,55 @@ namespace EmployeeManagement
 
             // Return the result.
             return _success;
+        }
+
+        // This method handles the search
+        public static async Task<DataResult> Search(string keyword, int searchmethod)
+        {
+            // Create JSON object to hold login details.
+            JObject _json = new JObject();
+            _json["keyword"] = keyword;
+            _json["searchmethod"] = searchmethod;
+
+            // Include the login token in JSON.
+            _json["token"] = s_Token;
+
+            // Create a form containig JSON.
+            FormUrlEncodedContent _form = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("data", _json.ToString())
+            });
+
+            // Make a POST request and get the response as a string.
+            string _response = "";
+            try
+            {
+                _response = await WebUtility.Post(Globals.EmployeeSearchUrl, _form);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Someting went wrong.\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            // Parse the response string to JSON object and create a list of
+            // employee object and populate it with data from JSON object.
+            _json = JObject.Parse(_response);
+            JArray _array = (JArray)_json["employees"];
+            List<Employee> _employees = new List<Employee>();
+            for (int i = 0; i < _array.Count; i++)
+            {
+                int _id = (int)_array[i]["id"];
+                string _firstname = _array[i]["first_name"].ToString();
+                string _lastname = _array[i]["last_name"].ToString();
+                string _jobtitle = _array[i]["job_title"].ToString();
+                string _email = _array[i]["email"].ToString();
+                int _role = (int)_array[i]["role"];
+                _employees.Add(new Employee(_id, _firstname, _lastname, _jobtitle, _email, _role));
+            }
+
+            // Return the result.
+            return new DataResult() { Employees = _employees, TotalePageCount = 1 };
         }
     }
 }
